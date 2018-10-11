@@ -1,6 +1,11 @@
 # Tweakers API
 A small Python wrapper for [tweakers.net](https://tweakers.net/).
 
+## Install
+```
+pip install tweakers
+```
+
 ## Usage
 ```
 import tweakers
