@@ -1,5 +1,5 @@
-# Tweakers API
-A small Python wrapper for [tweakers.net](https://tweakers.net/).
+# Tweakers
+A Python wrapper for [tweakers.net](https://tweakers.net/)
 
 ## Install
 ```
