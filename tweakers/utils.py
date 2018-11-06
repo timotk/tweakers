@@ -58,9 +58,12 @@ def id_from_url(url: str) -> int:
 
 def login(username: str, password: str) -> None:  # pragma: no cover
     url = "https://tweakers.net/my.tnet/login/"
-
     response = session.get(url)
-    token = response.html.find("input[name=tweakers_login_form\[_token\]]")[0].attrs["value"]
+    try:
+        token = response.html.find("input[name=tweakers_login_form\[_token\]]")[0].attrs["value"]
+    except IndexError:  # Already logged in
+        return
+
     data = {"tweakers_login_form[_token]": token,
             "tweakers_login_form[user]": username,
             "tweakers_login_form[password]": password
