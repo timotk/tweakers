@@ -20,7 +20,7 @@ def fetch(url: str) -> HTMLResponse:
     return response
 
 
-def _require_cookies():
+def _require_cookies() -> None:
     """
     Get cookies if not already accepted
     """
@@ -34,7 +34,7 @@ def _require_cookies():
     session.post(url="https://tweakers.net/my.tnet/cookies", data=data)
 
 
-def id_from_url(url):
+def id_from_url(url: str) -> int:
     """
     Parse the id from the URL
 

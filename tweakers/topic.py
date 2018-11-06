@@ -3,6 +3,8 @@ import time
 # from datetime import datetime
 from typing import Union, List, Generator
 
+from requests_html import HTMLResponse
+
 from .utils import id_from_url, fetch
 from .comment import Comment
 from . import parsers
@@ -15,8 +17,8 @@ class Topic:
 
     def __init__(self, url, **kwargs) -> None:
         self.__dict__.update(kwargs)
-        self.url = url
-        self.id = id_from_url(self.url)
+        self.url: str = url
+        self.id: int = id_from_url(self.url)
 
     def comments(self, page: Union[int, str]) -> List[Comment]:
         """
@@ -25,7 +27,7 @@ class Topic:
         :param page: Page number (zero indexed) or 'last' for last page.
         :return: A list of Comment objects.
         """
-        response = fetch(url=f"{self.url}/{page}")
+        response: HTMLResponse = fetch(url=f"{self.url}/{page}")
         return [Comment(**d) for d in parsers.topic_comments(response.html)]
 
     def comment_stream(
@@ -40,17 +42,17 @@ class Topic:
         """
 
         # get the last posted comment id, required for getting new comments
-        comments = self.comments("last")
-        last_message_id = comments[-1].id
+        comments: List = self.comments("last")
+        last_message_id: int = comments[-1].id
 
         # yield last n comments
         for comment in comments[-last:]:
             yield comment
 
-        timer = refresh
+        timer: int = refresh
         while True:
-            epoch_time = int(time.time())  # required for getting new comments
-            ajax_url = f"https://gathering.tweakers.net/ajax/list_new_messages/{self.id}/{last_message_id}?output=json\
+            epoch_time: int = int(time.time())  # required for getting new comments
+            ajax_url: str = f"https://gathering.tweakers.net/ajax/list_new_messages/{self.id}/{last_message_id}?output=json\
                     &nocache={epoch_time}"
             comments = self.get_new_comments(ajax_url)
 
@@ -75,8 +77,10 @@ class Topic:
         """
         json = fetch(ajax_url).json()
 
+        new_comments: List
         try:
-            html = "".join(json["data"]["messages"])
-            return [Comment(**d) for d in parsers.topic_comments(html)]
+            html: str = "".join(json["data"]["messages"])
+            new_comments = [Comment(**d) for d in parsers.topic_comments(html)]
         except KeyError:  # no new messages
-            return []
+            new_comments = []
+        return new_comments

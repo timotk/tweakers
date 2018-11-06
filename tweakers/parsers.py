@@ -1,19 +1,21 @@
-from typing import Generator, Union
+from typing import Dict, Generator, Union
 
 from requests_html import HTML
 import dateparser
 
 
 def get_comment_count(html: HTML) -> int:
+    comment_count: int
     try:
-        return int(html.find(".commentCount", first=True).text)
+        comment_count = int(html.find(".commentCount", first=True).text)
     except AttributeError:  # Also count the opening post
-        return 1
+        comment_count = 1
+    return comment_count
 
 
 def active_topics(html: HTML) -> Generator[dict, None, None]:
     for tr in html.find(".listing tr")[1:]:
-        topic = {
+        topic: Dict = {
             "title": tr.find(".topic a", first=True).text,
             "url": tr.find(".topic a", first=True).attrs["href"],
             "poster": tr.find(".poster", first=True).text,
@@ -27,7 +29,7 @@ def active_topics(html: HTML) -> Generator[dict, None, None]:
 
 def search_topics(html: HTML) -> Generator[dict, None, None]:
     for tr in html.find(".forumlisting tr")[2::2]:
-        topic = {
+        topic: Dict = {
             "title": tr.find(".title a", first=True).text,
             "url": tr.find(".title a", first=True).attrs["href"],
             "last_reply": dateparser.parse(
@@ -38,10 +40,12 @@ def search_topics(html: HTML) -> Generator[dict, None, None]:
 
 
 def get_rating(div):
+    rating: int
     try:
-        return int(div.find("span.ratingcount", first=True).text.replace("+", ""))
+        rating = int(div.find("span.ratingcount", first=True).text.replace("+", ""))
     except AttributeError:  # post too old for rating
-        return 0
+        rating = 0
+    return rating
 
 
 def topic_comments(html: Union[HTML, str]) -> Generator[dict, None, None]:
@@ -49,7 +53,7 @@ def topic_comments(html: Union[HTML, str]) -> Generator[dict, None, None]:
         html = HTML(html=html)
 
     for div in html.find(".message"):
-        message = {
+        message: Dict = {
             "id": int(div.attrs["data-message-id"]),
             "username": div.find("a.user", first=True).text,
             "date": dateparser.parse(
