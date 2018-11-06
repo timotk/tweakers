@@ -54,3 +54,23 @@ def id_from_url(url: str) -> int:
             "Getting the id for url ({url}) is not yet implemented"
         )
     return int(id)
+
+
+def login(username: str, password: str) -> None:  # pragma: no cover
+    url = "https://tweakers.net/my.tnet/login/"
+
+    response = session.get(url)
+    token = response.html.find("input[name=tweakers_login_form\[_token\]]")[0].attrs["value"]
+    data = {"tweakers_login_form[_token]": token,
+            "tweakers_login_form[user]": username,
+            "tweakers_login_form[password]": password
+            }
+    login_response = session.post(url=url, data=data)
+
+    login_error_text = "De combinatie van gebruikersnaam of e-mailadres en wachtwoord is onjuist."
+    if login_error_text in login_response.text:
+        raise ValueError("Invalid username or password.")
+
+    captcha_error_text = "Om te bewijzen dat je geen robot bent, moet een captcha worden ingevuld."
+    if captcha_error_text in login_response.text:
+        raise Exception("Captcha warning triggered, unable to login!")
