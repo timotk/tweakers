@@ -39,6 +39,18 @@ def search_topics(html: HTML) -> Generator[dict, None, None]:
         yield topic
 
 
+def bookmark_topics(html: HTML) -> Generator[dict, None, None]:
+    for tr in html.find(".listing tr.alt")[1:]:
+        topic: Dict = {
+            "title": tr.find(".topic a")[1].text,
+            "url": tr.find(".topic a")[1].attrs["href"],
+            "last_reply": dateparser.parse(
+                tr.find(".time a", first=True).text, languages=["nl"]
+            ),
+        }
+        yield topic
+
+
 def get_rating(div):
     rating: int
     try:

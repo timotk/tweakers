@@ -25,3 +25,13 @@ def search(query: str) -> List[Topic]:
     response: HTMLResponse = fetch(url=f"{url}/forum/find?keyword={query}")
     topics: List = [Topic(**d) for d in parsers.search_topics(response.html)]
     return topics
+
+
+def bookmarks() -> List[Topic]:
+    """Get a list of bookmarks
+
+    :return: Bookmarks
+    """
+    response: HTMLResponse = fetch(url=f"{url}/forum/list_bookmarks")
+    topics: List = [Topic(**d) for d in parsers.bookmark_topics(response.html)]
+    return topics
