@@ -1,4 +1,7 @@
 # Tweakers
+[![Build Status](https://travis-ci.org/timotk/tweakers.svg?branch=master)](https://travis-ci.org/timotk/tweakers)
+[![codecov](https://codecov.io/gh/timotk/tweakers/branch/master/graph/badge.svg)](https://codecov.io/gh/timotk/tweakers)
+
 A Python wrapper for [tweakers.net](https://tweakers.net/)
 
 ## Install
