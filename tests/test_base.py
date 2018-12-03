@@ -5,7 +5,7 @@ from tweakers import utils
 def test__require_cookies():
     assert len(utils.session.cookies) == 0
     utils._require_cookies()
-    assert len(utils.session.cookies) == 3
+    assert len(utils.session.cookies) >= 3
 
 
 def test_fetch():
