@@ -5,7 +5,11 @@ python:
 
 install:
   - pip install -r requirements.txt
+  - pip install codecov
   - pip install .
 
 script:
-  - pytest
+  - pytest --cov=tweakers
+
+after_success:
+  - codecov
