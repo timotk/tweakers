@@ -1,3 +1,7 @@
+"""
+Tweakers.net comments.
+"""
+
 from .user import User
 
 

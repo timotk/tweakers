@@ -1,10 +1,9 @@
-from .utils import id_from_url
-
+"""
+A tweakers.net user.
+"""
 
 class User:
-    """
-    A Tweakers.net user
-    """
+    """A Tweakers.net user"""
 
     def __init__(self, **kwargs) -> None:
         required = ["id", "name"]

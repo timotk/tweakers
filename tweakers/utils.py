@@ -1,6 +1,7 @@
 """
-Session handler
+Utilities.
 """
+
 from requests_html import HTMLSession, HTMLResponse
 
 

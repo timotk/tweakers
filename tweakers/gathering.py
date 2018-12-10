@@ -1,6 +1,7 @@
 """
-gathering.tweakers.net
+gathering.tweakers.net (forums).
 """
+
 from typing import List
 
 from requests_html import HTMLResponse

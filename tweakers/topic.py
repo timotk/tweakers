@@ -1,6 +1,9 @@
+"""
+gathering.tweakers.net topics
+"""
+
 import time
 
-# from datetime import datetime
 from typing import Union, List, Generator
 
 from requests_html import HTMLResponse

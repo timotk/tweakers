@@ -1,3 +1,7 @@
+"""
+HTML parsers.
+"""
+
 from typing import Dict, Generator, Union
 
 from requests_html import HTML
