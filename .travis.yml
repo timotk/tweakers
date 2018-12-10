@@ -1,14 +1,20 @@
 language: python
 python:
-  - "3.6"
-
+- '3.6'
 install:
-  - pip install -r requirements.txt
-  - pip install codecov pytest-cov
-  - pip install .
-
+- pip install -r requirements.txt
+- pip install codecov pytest-cov
+- pip install .
 script:
-  - pytest --cov=tweakers
-
+- pytest --cov=tweakers
 after_success:
-  - codecov
+- codecov
+deploy:
+  provider: pypi
+  user: "timotk"
+  password:
+    secure: "tVIuXNA0JbFyjvI3SxI/ls0osnR7cSwe5CNm8+Yjr8B8VsFvpcwcuSxmRxiqo4isHOOfSU47srrsmOxGwb6W7jUrLmhbvbQrWQK4L1bMp4GsINKvBrrm5/Rn7U5ma9HvONW42P/mhiR9/rsrmfrebjnE0gNCYTDPNP6bVKaMvJppHk3ja2WkNQinDRgMHxeA7KbM8OgDsLoG0POXR1bnLXKJamKW7n8fEEZPtHmo8wqx8/RLJkcMkPXoOKSfLghjbAZUuGDi+BYYVozwmRXec80e7bvY0v+kb4NgyhxqC2gatdfbZ2Lp/QnqzB81sf+ixJTwkfsbswjOz6yzRuAYMIuctcTIbhGKqZ7V7Ga0a39zQMtWIVeh4mTF0ZdlKfb3uJW1mCIWohv+lxBQ3SeDAOlfNTzIqWcC4mvfXpIqlY8gInQrhTU74UlWYp0JnddTW2f4t0gWRJRY0ePMGC4Qne/CkqEyqffqnLn4UJN7p1s1adiK9K6XZa5RkzxDcuTI41OCwpqMn0iTAGlH4QokLdp63fTZxz4GbPyp6FWmCqspZv5sZjEos9AI1CDKVVrTu7E9jvv+v/Wee1o0LrJ05J9rMP00Y40ZasmFpXdWAnLe6BSB+vFY2daCrgP65WaSqwSKR/ly1yPXLRAV0aNMBSwADAOfqS7Og9gkGgHMcNo="
+  on:
+    tags: true
+    branch: master
+  skip_existing: true
