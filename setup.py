@@ -1,7 +1,5 @@
 from setuptools import setup
 
-from tweakers import __version__
-
 
 with open('README.md') as f:
     readme = f.read()
@@ -12,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='tweakers',
-    version=__version__,
+    version="0.3.2",
     description='A Python API for https://tweakers.net',
     long_description=readme,
     long_description_content_type='text/markdown',
