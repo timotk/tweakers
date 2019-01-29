@@ -1,7 +1,7 @@
 """A Python wrapper for https://tweakers.net"""
 
 
-from . import gathering, topic
+from . import gathering, topic, frontpage
 from .user import User
 from .utils import login
 

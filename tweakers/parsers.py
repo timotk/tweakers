@@ -81,3 +81,14 @@ def topic_comments(html: Union[HTML, str]) -> Generator[dict, None, None]:
             "html": div.html,
         }
         yield message
+
+
+def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
+    for tr in html.find("tr.editorial"):
+        topic: Dict = {
+            "title": tr.find(".title a", first=True).text,
+            "url": tr.find(".title a", first=True).attrs["href"],
+            "comment_count": get_comment_count(tr),
+            "publication_time": tr.find(".publicationTime", first=True).text,
+        }
+        yield topic
