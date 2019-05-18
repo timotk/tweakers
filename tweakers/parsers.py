@@ -84,7 +84,7 @@ def topic_comments(html: Union[HTML, str]) -> Generator[dict, None, None]:
 
 
 def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
-    for tr in html.find("tr.editorial"):
+    for tr in html.find("tr.headline.news"):
         topic: Dict = {
             "title": tr.find(".title a", first=True).text,
             "url": tr.find(".title a", first=True).attrs["href"],
@@ -92,3 +92,16 @@ def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
             "publication_time": tr.find(".publicationTime", first=True).text,
         }
         yield topic
+
+
+def article_comments(html: HTML) -> Generator[dict, None, None]:
+    for div in html.find("div.reactieBody"):
+        comment: Dict = {
+            "username": div.find("a.userLink", first=True).text,
+            "date": dateparser.parse(
+                div.find("a.date", first=True).text, languages=["nl"]
+            ),
+            "text": div.find(".reactieContent", first=True).text,
+            "score": int(div.find("a.scoreButton", first=True).text),
+        }
+        yield comment

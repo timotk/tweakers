@@ -3,6 +3,7 @@ from tweakers import utils
 
 
 def test__require_cookies():
+    utils.session.cookies.clear()
     assert len(utils.session.cookies) == 0
     utils._require_cookies()
     assert len(utils.session.cookies) >= 3
@@ -10,7 +11,7 @@ def test__require_cookies():
 
 def test_fetch():
     response = utils.fetch(url="https://tweakers.net")
-    assert "Nieuws van vandaag" in response.html.text
+    assert "Laatste nieuws" in response.html.text
     assert "Cookies op Tweakers" not in response.html.text
 
 

@@ -7,6 +7,7 @@ from typing import List
 from requests_html import HTMLResponse
 from .utils import fetch
 from .topic import Topic
+from .comment import Comment
 from . import parsers
 
 
@@ -14,8 +15,18 @@ url = "https://tweakers.net"
 
 
 class Article:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, url, **kwargs):
+        self.url = url
         self.__dict__.update(kwargs)
+
+    def comments(self):
+        """Get comments for a frontpage article.
+
+        :return: A list of Comment objects.
+        """
+        # TODO: ADD PAGINATION OF COMMENTS
+        response: HTMLResponse = fetch(url=f"{self.url}")
+        return [Comment(**d) for d in parsers.article_comments(response.html)]
 
 
 def articles() -> List["Articles"]:
