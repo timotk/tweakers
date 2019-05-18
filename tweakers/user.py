@@ -2,6 +2,7 @@
 A tweakers.net user.
 """
 
+
 class User:
     """A Tweakers.net user"""
 
