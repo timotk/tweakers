@@ -20,14 +20,16 @@ def test_fetch_exception():
         utils.fetch(url="https://tweakers.net/a/")
 
 
-def test_id_from_url():
-    urls_ids = {
-        "https://gathering.tweakers.net/forum/list_messages/812397": 812397,
-        "https://tweakers.net/aanbod/1/deur-lian-li-pc-60-zonder-window.html": 1,
-        "https://tweakers.net/pricewatch/1118063/samsung-galaxy-s9-dual-sim-64gb-zwart.html": 1118063,
-    }
-    for url, id in urls_ids.items():
-        assert utils.id_from_url(url) == id
+@pytest.mark.parametrize(
+    "url,item_id",
+    [
+        ("https://gathering.tweakers.net/forum/list_messages/812397", 812397),
+        ("https://tweakers.net/aanbod/1/deur-lian-li-pc-60-zonder-window.html", 1),
+        ("https://tweakers.net/pricewatch/1118063/samsung-galaxy-s9-dual-sim-64gb-zwart.html", 1118063),
+    ]
+)
+def test_id_from_url(url, item_id):
+    assert utils.id_from_url(url) == item_id
 
 
 def test_id_from_url_exception():
