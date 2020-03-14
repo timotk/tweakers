@@ -97,11 +97,18 @@ def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
 def article_comments(html: HTML) -> Generator[dict, None, None]:
     for div in html.find("div.reactieBody"):
         comment: Dict = {
-            "username": div.find("a.userLink", first=True).text,
+            "username": _get_text(div, selector=".userLink"),
             "date": dateparser.parse(
-                div.find("a.date", first=True).text, languages=["nl"]
+                _get_text(div, selector="a.date"), languages=["nl"]
             ),
-            "text": div.find(".reactieContent", first=True).text,
-            "score": int(div.find("a.scoreButton", first=True).text),
+            "text": _get_text(div, selector=".reactieContent"),
+            "score": int(_get_text(div, selector="a.scoreButton")),
         }
         yield comment
+
+
+def _get_text(html: HTML, selector: str) -> Union[str, None]:
+    try:
+        return html.find(selector, first=True).text
+    except AttributeError:
+        return
