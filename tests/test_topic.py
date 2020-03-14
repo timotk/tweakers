@@ -1,16 +1,20 @@
 from unittest import mock
 
+import pytest
+
 from tweakers.topic import Topic
 from tweakers.comment import Comment
 
+@pytest.fixture
+def topic():
+    return Topic(url="https://gathering.tweakers.net/forum/list_messages/1908208")
 
-def test_topic():
-    topic = Topic(url="https://gathering.tweakers.net/forum/list_messages/812397")
+
+def test_topic(topic):
     assert topic
 
 
-def test_topic_comments():
-    topic = Topic(url="https://gathering.tweakers.net/forum/list_messages/812397")
+def test_topic_comments(topic):
     assert len(topic.comments(page=1)) > 0
 
 
@@ -23,14 +27,15 @@ def mock_get_new_comments(*args, **kwargs):
 
 
 @mock.patch("tweakers.topic.Topic.get_new_comments", mock_get_new_comments)
-def test_topic_comments_stream():
-    topic = Topic(url="https://gathering.tweakers.net/forum/list_messages/812397")
+def test_topic_comments_stream(topic):
     comment_generator = topic.comment_stream()
     count = 0
     comments = []
-    for c in comment_generator:
+    for comment in comment_generator:
         count += 1
-        comments.append(c)
+        comments.append(comment)
         if count == 3:
             break
     assert len(comments) == 3
+    for comment in comments:
+        assert comment
