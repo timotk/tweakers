@@ -39,7 +39,7 @@ def _require_cookies() -> None:
 
     url = "https://tweakers.net"
     response = get(url)
-    token = response.html.find("input[name=tweakers_token]")[0].attrs["value"]
+    token = response.html.find(r"input[name=tweakers_token]")[0].attrs["value"]
     data = {"decision": "accept", "tweakers_token": token}
     session.post(url="https://tweakers.net/my.tnet/cookies", data=data)
 
