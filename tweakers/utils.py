@@ -1,13 +1,24 @@
 """
 Utilities.
 """
-
+from .rate_limit import rate_limit
 from requests_html import HTMLSession, HTMLResponse
-
 
 session = HTMLSession()
 
 
+def get(url: str) -> HTMLResponse:
+    response = session.get(url)
+    if response.status_code == 429:
+        raise Exception(
+            "Error [HTTP 429]: Too Many Requests. This is a rate limit problem."
+        )
+    if not 200 <= response.status_code < 300:
+        raise Exception(f"Url {url} returned a {response.status_code}")
+    return response
+
+
+@rate_limit
 def fetch(url: str) -> HTMLResponse:
     """
     :param url: Url to fetch.
@@ -15,9 +26,7 @@ def fetch(url: str) -> HTMLResponse:
     """
     _require_cookies()
 
-    response = session.get(url)
-    if not 200 >= response.status_code < 300:
-        raise Exception(f"Url {url} returned a {response.status_code}")
+    response = get(url)
     return response
 
 
@@ -29,7 +38,7 @@ def _require_cookies() -> None:
         return
 
     url = "https://tweakers.net"
-    response = session.get(url)
+    response = get(url)
     token = response.html.find("input[name=tweakers_token]")[0].attrs["value"]
     data = {"decision": "accept", "tweakers_token": token}
     session.post(url="https://tweakers.net/my.tnet/cookies", data=data)
