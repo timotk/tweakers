@@ -7,6 +7,7 @@ from requests_html import HTMLSession, HTMLResponse
 session = HTMLSession()
 
 
+@rate_limit
 def get(url: str) -> HTMLResponse:
     response = session.get(url)
     if response.status_code == 429:
@@ -18,7 +19,6 @@ def get(url: str) -> HTMLResponse:
     return response
 
 
-@rate_limit
 def fetch(url: str) -> HTMLResponse:
     """
     :param url: Url to fetch.

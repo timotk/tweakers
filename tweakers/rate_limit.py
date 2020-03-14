@@ -5,7 +5,7 @@ class rate_limit:
     def __init__(self, func):
         self.func = func
         self.last_called = 0
-        self.wait_time = 5
+        self.wait_time = 10
 
     def __call__(self, *args, **kwargs):
         now = time.perf_counter()
