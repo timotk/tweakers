@@ -1,5 +1,5 @@
 # Tweakers
-![Build status](https://github.com/timotk/tweakers/workflows/Python%20application/badge.svg)
+![Build](https://github.com/timotk/tweakers/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/timotk/tweakers/branch/master/graph/badge.svg)](https://codecov.io/gh/timotk/tweakers)
 [![PyPI](https://img.shields.io/pypi/v/tweakers.svg)](https://pypi.org/project/tweakers)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tweakers.svg)
