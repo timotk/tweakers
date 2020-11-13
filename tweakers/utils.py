@@ -1,6 +1,7 @@
 """
 Utilities.
 """
+from requests import Response
 from tenacity import (
     retry,
     stop_after_attempt,
@@ -9,7 +10,11 @@ from tenacity import (
 )
 from requests_html import HTMLSession, HTMLResponse
 
-from tweakers.exceptions import RateLimitException
+from tweakers.exceptions import (
+    RateLimitException,
+    InvalidCredentialsException,
+    CaptchaRequiredException,
+)
 
 session = HTMLSession()
 session.headers.update({"X-Cookies-Accepted": "1"})  # Bypass the cookiewall
@@ -68,14 +73,21 @@ def login(username: str, password: str) -> None:  # pragma: no cover
     }
     login_response = session.post(url=url, data=data)
 
+    _raise_for_invalid_credentials(login_response)
+    _raise_for_captcha_error(login_response)
+
+
+def _raise_for_invalid_credentials(login_response: Response) -> None:
     login_error_text = (
         "De combinatie van gebruikersnaam of e-mailadres en wachtwoord is onjuist."
     )
     if login_error_text in login_response.text:
-        raise ValueError("Invalid username or password.")
+        raise InvalidCredentialsException
 
+
+def _raise_for_captcha_error(login_response: Response) -> None:
     captcha_error_text = (
         "Om te bewijzen dat je geen robot bent, moet een captcha worden ingevuld."
     )
     if captcha_error_text in login_response.text:
-        raise Exception("Captcha warning triggered, unable to login!")
+        raise CaptchaRequiredException
