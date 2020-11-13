@@ -8,7 +8,7 @@ from typing import Union, List, Generator
 
 from requests_html import HTMLResponse
 
-from .utils import id_from_url, fetch
+from .utils import id_from_url, get
 from .comment import Comment
 from . import parsers
 
@@ -30,7 +30,7 @@ class Topic:
         :param page: Page number (zero indexed) or 'last' for last page.
         :return: A list of Comment objects.
         """
-        response: HTMLResponse = fetch(url=f"{self.url}/{page}")
+        response: HTMLResponse = get(url=f"{self.url}/{page}")
         return [Comment(**d) for d in parsers.topic_comments(response.html)]
 
     def comment_stream(
@@ -78,7 +78,7 @@ class Topic:
         :param ajax_url: Ajax url to query for new comments.
         :return: A list of comment objects.
         """
-        json = fetch(ajax_url).json()
+        json = get(ajax_url).json()
 
         new_comments: List
         try:

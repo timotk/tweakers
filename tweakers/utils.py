@@ -1,47 +1,32 @@
 """
 Utilities.
 """
-from .rate_limit import rate_limit
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 from requests_html import HTMLSession, HTMLResponse
 
+from tweakers.exceptions import RateLimitException
+
 session = HTMLSession()
+session.headers.update({"X-Cookies-Accepted": "1"})  # Bypass the cookiewall
 
 
-@rate_limit
+@retry(
+    retry=retry_if_exception_type(),
+    wait=wait_exponential(multiplier=1, min=5, max=10),
+    stop=stop_after_attempt(3),
+)
 def get(url: str) -> HTMLResponse:
     response = session.get(url)
     if response.status_code == 429:
-        raise Exception(
-            "Error [HTTP 429]: Too Many Requests. This is a rate limit problem."
-        )
+        raise RateLimitException()
     if not 200 <= response.status_code < 300:
         raise Exception(f"Url {url} returned a {response.status_code}")
     return response
-
-
-def fetch(url: str) -> HTMLResponse:
-    """
-    :param url: Url to fetch.
-    :return: HTMLResponse.
-    """
-    _require_cookies()
-
-    response = get(url)
-    return response
-
-
-def _require_cookies() -> None:
-    """
-    Get cookies if not already accepted
-    """
-    if len(session.cookies) > 2:
-        return
-
-    url = "https://tweakers.net"
-    response = get(url)
-    token = response.html.find(r"input[name=tweakers_token]")[0].attrs["value"]
-    data = {"decision": "accept", "tweakers_token": token}
-    session.post(url="https://tweakers.net/my.tnet/cookies", data=data)
 
 
 def id_from_url(url: str) -> int:
