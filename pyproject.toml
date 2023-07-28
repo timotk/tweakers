@@ -22,13 +22,9 @@ requests-html = "^0.10.0"
 dateparser = "^0.7.0"
 tenacity = "^6.2.0"
 
-[tool.poetry.dev-dependencies]
-pytest = "^4.0"
-pytest-cov = "^2.6"
-black = "^19.10b0"
-httpx = "^0.24.1"
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.280"
 black = "23.7.0"
-
+pytest = "^4.0"
+pytest-cov = "^2.6"
+httpx = "^0.24.1"
