@@ -11,6 +11,8 @@ def mock_get(url: str):
         case = "user"
     elif "/list_activetopics" in url:
         case = "active_topics"
+    elif "forum/find" in url:
+        case = "find"
     elif url in ("https://tweakers.net/", "https://tweakers.net"):
         case = "frontpage"
     else:
