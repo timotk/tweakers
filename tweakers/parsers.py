@@ -87,7 +87,7 @@ def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
     for tr in html.find(".headline"):
         topic: Dict = {
             "title": tr.text.strip(),
-            "url": tr.find('a.headline--anchor', first=True).attrs['href'],
+            "url": tr.find("a.headline--anchor", first=True).attrs["href"],
             "comment_count": get_comment_count(tr),
             "publication_time": tr.find(".headline--time", first=True).text,
         }

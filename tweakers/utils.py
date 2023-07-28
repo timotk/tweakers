@@ -28,6 +28,7 @@ session.headers.update({"X-Cookies-Accepted": "1"})  # Bypass the cookiewall
 def get(url: str) -> HTMLResponse:
     response = session.get(url)
     if response.status_code == 429:
+        print("Rate limited, waiting...")
         raise RateLimitException()
     if not 200 <= response.status_code < 300:
         raise Exception(f"Url {url} returned a {response.status_code}")

@@ -29,7 +29,7 @@ class Article:
         return [Comment(**d) for d in parsers.article_comments(response.html)]
 
 
-def articles() -> List["Articles"]:
+def articles() -> List[Article]:
     response: HTMLResponse = get(url)
     articles: List = [Article(**d) for d in parsers.frontpage_articles(response.html)]
     return articles
