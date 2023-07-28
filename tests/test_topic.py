@@ -1,10 +1,12 @@
 from unittest import mock
 
 import pytest
+from tests.mocks import mock_get
 
 from tweakers.topic import Topic
 from tweakers.comment import Comment
 
+@mock.patch("tweakers.topic.get", mock_get)
 @pytest.fixture
 def topic():
     return Topic(url="https://gathering.tweakers.net/forum/list_messages/1908208")
