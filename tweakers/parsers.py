@@ -2,10 +2,13 @@
 HTML parsers.
 """
 
+from datetime import date, datetime, timedelta
 from typing import Dict, Generator, Union
 
 import dateparser
 from requests_html import HTML
+
+from tweakers.user import User
 
 
 def get_comment_count(html: HTML) -> int:
@@ -69,40 +72,82 @@ def topic_comments(html: Union[HTML, str]) -> Generator[dict, None, None]:
         html = HTML(html=html)
 
     for div in html.find(".message"):
-        message: Dict = {
-            "id": int(div.attrs["data-message-id"]),
-            "username": div.find("a.user", first=True).text,
-            "date": dateparser.parse(
-                div.find("div.date", first=True).text, languages=["nl"]
-            ),
-            "url": div.find(".date p a", first=True).attrs["href"],
-            "rating": get_rating(div),
-            "text": div.find(".messagecontent", first=True).text,
-            "html": div.html,
+        id = div.attrs["data-message-id"]
+        user_id = div.attrs["data-owner-id"]
+        username = div.find("a.user", first=True).text
+        user_url = div.find("a.user", first=True).attrs["href"]
+        user = User(id=user_id, name=username, url=user_url)
+        _epoch_time = div.find(".date span", first=True).attrs["data-timestamp"]
+        _epoch_time = int(_epoch_time)
+        timestamp = datetime.fromtimestamp(_epoch_time)
+        url = div.find(".date a", first=True).attrs["href"]
+
+        text = div.find(".messagecontent", first=True).text
+        score = get_rating(div)
+        comment: Dict = {
+            "id": id,
+            "user": user,
+            "created": timestamp,
+            "text": text,
+            "url": url,
+            "score": score,
         }
-        yield message
+        yield comment
 
 
 def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
-    for tr in html.find(".headline"):
-        topic: Dict = {
-            "title": tr.text.strip(),
-            "url": tr.find("a.headline--anchor", first=True).attrs["href"],
-            "comment_count": get_comment_count(tr),
-            "publication_time": tr.find(".headline--time", first=True).text,
-        }
-        yield topic
+    for i, day in enumerate(
+        [html.find(".headlines-head"), *html.find(".headline--day")]
+    ):
+        article_date = date.today() - timedelta(days=i)
+        for elem in html.find(".headlineItem.news"):
+            time_text = elem.find(".headline--time", first=True).text
+            time = datetime.strptime(time_text, "%H:%M").time()
+            timestamp = datetime.combine(article_date, time)
+
+            topic: Dict = {
+                "title": elem.find(".headline--anchor", first=True).text,
+                "url": elem.find("a.headline--anchor", first=True).attrs["href"],
+                "comment_count": get_comment_count(elem),
+                "published_at": timestamp,
+            }
+            yield topic
 
 
 def article_comments(html: HTML) -> Generator[dict, None, None]:
-    for div in html.find("div.reactieBody"):
-        comment: Dict = {
-            "username": _get_text(div, selector=".userLink"),
-            "date": dateparser.parse(
-                _get_text(div, selector="a.date"), languages=["nl"]
-            ),
-            "text": _get_text(div, selector=".reactieContent"),
-            "score": _get_text(div, selector="a.scoreButton"),
+    for elem in html.find("twk-reaction"):
+        comment_id = elem.attrs["data-reaction-id"]
+
+        user_id = elem.attrs["data-owner-id"]
+        _user_a = elem.find(".userLink", first=True)
+
+        try:
+            user_url = _user_a.attrs["href"]
+            username = _user_a.text
+            user = User(id=user_id, name=username, url=user_url)
+        except KeyError:  # User is deleted
+            username = _user_a.text
+            user = User(id=user_id, name=username, url=None)
+
+        _date = elem.find(".date", first=True)
+        created = dateparser.parse(_date.text, languages=["nl"])
+
+        try:
+            text = elem.find(".reactieContent", first=True).text
+        except AttributeError:  # Reaction is hidden
+            text = None
+
+        try:
+            score = elem.find(".moderation-button", first=True).attrs["score"]
+        except KeyError:
+            score = None
+
+        comment = {
+            "id": comment_id,
+            "user": user,
+            "created": created,
+            "text": text,
+            "score": score,
         }
         yield comment
 

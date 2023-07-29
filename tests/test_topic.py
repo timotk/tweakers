@@ -3,8 +3,9 @@ from unittest import mock
 import pytest
 
 from tests.mocks import mock_get
-from tweakers.comment import Comment
+from tweakers.models import Comment
 from tweakers.topic import Topic
+from tweakers.user import User
 
 
 @pytest.fixture
@@ -23,9 +24,9 @@ def test_topic_comments(topic):
 
 def mock_get_new_comments(*args, **kwargs):
     return [
-        Comment(id=1, text="test1"),
-        Comment(id=2, text="test2"),
-        Comment(id=3, text="test3"),
+        Comment(id=1, text="test1", user=User(id=1)),
+        Comment(id=2, text="test2", user=User(id=1)),
+        Comment(id=3, text="test3", user=User(id=2)),
     ]
 
 

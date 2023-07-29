@@ -1,18 +1,15 @@
-"""
-Tweakers.net comments.
-"""
+import datetime
+from typing import Optional
 
-from .user import User
+from pydantic import BaseModel
+
+from tweakers.user import User
 
 
-class Comment:
-    """
-    A comment on a gathering.tweakers.net topic
-    """
-
-    def __init__(self, **kwargs) -> None:
-        for k, v in kwargs.items():
-            if k == "username":
-                setattr(self, "user", User(name=v))
-            else:
-                setattr(self, k, v)
+class Comment(BaseModel):
+    id: int
+    user: User
+    created: datetime.datetime
+    text: Optional[str] = None  # None if comment hidden because of low score
+    score: Optional[int] = None
+    # TODO: url: str

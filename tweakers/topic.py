@@ -3,8 +3,9 @@ gathering.tweakers.net topics
 """
 
 import time
-from typing import Generator, List, Union
+from typing import Any, Generator, List, Optional, Union
 
+from pydantic import BaseModel
 from requests_html import HTMLResponse
 
 from . import parsers
@@ -12,15 +13,27 @@ from .comment import Comment
 from .utils import get, id_from_url
 
 
-class Topic:
-    """
-    A topic on gathering.tweakers.net
-    """
+class Topic(BaseModel):
+    url: str
+    _html: Optional[Any] = None
 
-    def __init__(self, url, **kwargs) -> None:
-        self.__dict__.update(kwargs)
-        self.url: str = url
-        self.id: int = id_from_url(self.url)
+    @property
+    def id(self) -> int:
+        return id_from_url(self.url)
+
+    @property
+    def html(self):
+        if self._html is None:
+            response = get(self.url)
+            self._html = response.html
+        return self._html
+
+    @property
+    def title(self) -> str:
+        if self._title is None:
+            self._title = self.html.find("#title", first=True).text
+        return self._title
+        raise NotImplementedError
 
     def comments(self, page: Union[int, str]) -> List[Comment]:
         """
