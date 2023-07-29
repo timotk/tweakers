@@ -3,14 +3,13 @@ gathering.tweakers.net topics
 """
 
 import time
-
-from typing import Union, List, Generator
+from typing import Generator, List, Union
 
 from requests_html import HTMLResponse
 
-from .utils import id_from_url, get
-from .comment import Comment
 from . import parsers
+from .comment import Comment
+from .utils import get, id_from_url
 
 
 class Topic:

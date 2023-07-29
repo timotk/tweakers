@@ -1,4 +1,5 @@
 from unittest import mock
+
 from tests.mocks import mock_get
 from tweakers import gathering
 

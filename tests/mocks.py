@@ -1,4 +1,3 @@
-import pytest
 from requests_html import HTML, HTMLResponse, HTMLSession
 
 
@@ -22,4 +21,3 @@ def mock_get(url: str):
         response = HTMLResponse(session=HTMLSession)
         response._html = HTML(html=f.read())
     return response
-    

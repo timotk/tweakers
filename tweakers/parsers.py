@@ -4,8 +4,8 @@ HTML parsers.
 
 from typing import Dict, Generator, Union
 
-from requests_html import HTML
 import dateparser
+from requests_html import HTML
 
 
 def get_comment_count(html: HTML) -> int:

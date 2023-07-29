@@ -5,11 +5,11 @@ https://tweakers.net frontpage.
 from typing import List
 
 from requests_html import HTMLResponse
-from .utils import get
-from .topic import Topic
-from .comment import Comment
-from . import parsers
 
+from . import parsers
+from .comment import Comment
+from .topic import Topic
+from .utils import get
 
 url = "https://tweakers.net"
 
@@ -29,7 +29,7 @@ class Article:
         return [Comment(**d) for d in parsers.article_comments(response.html)]
 
 
-def articles() -> List["Articles"]:
+def articles() -> List[Article]:
     response: HTMLResponse = get(url)
     articles: List = [Article(**d) for d in parsers.frontpage_articles(response.html)]
     return articles

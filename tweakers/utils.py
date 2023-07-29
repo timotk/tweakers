@@ -2,18 +2,18 @@
 Utilities.
 """
 from requests import Response
+from requests_html import HTMLResponse, HTMLSession
 from tenacity import (
     retry,
+    retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
-    retry_if_exception_type,
 )
-from requests_html import HTMLSession, HTMLResponse
 
 from tweakers.exceptions import (
-    RateLimitException,
-    InvalidCredentialsException,
     CaptchaRequiredException,
+    InvalidCredentialsException,
+    RateLimitException,
 )
 
 session = HTMLSession()

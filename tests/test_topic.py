@@ -2,8 +2,9 @@ from unittest import mock
 
 import pytest
 
-from tweakers.topic import Topic
 from tweakers.comment import Comment
+from tweakers.topic import Topic
+
 
 @pytest.fixture
 def topic():

@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+
 from tweakers import utils
 from tweakers.exceptions import CaptchaRequiredException, InvalidCredentialsException
 

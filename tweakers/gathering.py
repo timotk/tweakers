@@ -5,10 +5,10 @@ gathering.tweakers.net (forums).
 from typing import List
 
 from requests_html import HTMLResponse
-from .utils import get
-from .topic import Topic
-from . import parsers
 
+from . import parsers
+from .topic import Topic
+from .utils import get
 
 url = "https://gathering.tweakers.net"
 
