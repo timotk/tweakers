@@ -1,6 +1,6 @@
 # Tweakers
 ![Build](https://github.com/timotk/tweakers/workflows/Build/badge.svg)
-[![codecov](https://codecov.io/gh/timotk/tweakers/branch/master/graph/badge.svg)](https://codecov.io/gh/timotk/tweakers)
+[![PyPi Publish](https://github.com/timotk/tweakers/actions/workflows/python-publish.yml/badge.svg)](https://github.com/timotk/tweakers/actions/workflows/python-publish.yml)
 [![PyPI](https://img.shields.io/pypi/v/tweakers.svg)](https://pypi.org/project/tweakers)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tweakers.svg)
 
