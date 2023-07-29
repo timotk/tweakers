@@ -19,7 +19,7 @@ from .utils import get, id_from_url
 class Topic(BaseModel):
     url: str
     title: Optional[str] = None
-    author: Optional[Union[User, list[User]]] = None
+    author: Optional[Union[User, List[User]]] = None
     last_reply: Optional[datetime] = None
     comment_count: Optional[int] = None
     _html: Optional[Any] = None

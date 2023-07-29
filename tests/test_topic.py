@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 
 from tests.mocks import mock_get
-from tweakers.models import Comment
+from tweakers.comment import Comment
 from tweakers.topic import Topic
 from tweakers.user import User
 
