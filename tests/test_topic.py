@@ -2,6 +2,7 @@ from unittest import mock
 
 import pytest
 
+from tests.mocks import mock_get
 from tweakers.comment import Comment
 from tweakers.topic import Topic
 
@@ -15,6 +16,7 @@ def test_topic(topic):
     assert topic
 
 
+@mock.patch("tweakers.topic.get", mock_get)
 def test_topic_comments(topic):
     assert len(topic.comments(page=1)) > 0
 
