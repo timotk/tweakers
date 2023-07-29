@@ -102,7 +102,7 @@ def article_comments(html: HTML) -> Generator[dict, None, None]:
                 _get_text(div, selector="a.date"), languages=["nl"]
             ),
             "text": _get_text(div, selector=".reactieContent"),
-            "score": int(_get_text(div, selector="a.scoreButton")),
+            "score": _get_text(div, selector="a.scoreButton"),
         }
         yield comment
 
