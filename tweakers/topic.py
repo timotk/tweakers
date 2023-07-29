@@ -3,10 +3,13 @@ gathering.tweakers.net topics
 """
 
 import time
+from datetime import datetime
 from typing import Any, Generator, List, Optional, Union
 
 from pydantic import BaseModel
 from requests_html import HTMLResponse
+
+from tweakers.user import User
 
 from . import parsers
 from .comment import Comment
@@ -15,6 +18,10 @@ from .utils import get, id_from_url
 
 class Topic(BaseModel):
     url: str
+    title: Optional[str] = None
+    author: Optional[Union[User, list[User]]] = None
+    last_reply: Optional[datetime] = None
+    comment_count: Optional[int] = None
     _html: Optional[Any] = None
 
     @property
@@ -27,13 +34,6 @@ class Topic(BaseModel):
             response = get(self.url)
             self._html = response.html
         return self._html
-
-    @property
-    def title(self) -> str:
-        if self._title is None:
-            self._title = self.html.find("#title", first=True).text
-        return self._title
-        raise NotImplementedError
 
     def comments(self, page: Union[int, str]) -> List[Comment]:
         """

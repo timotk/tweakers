@@ -11,7 +11,16 @@ from requests_html import HTML
 from tweakers.user import User
 
 
-def get_comment_count(html: HTML) -> int:
+def get_article_comment_count(html: HTML) -> int:
+    comment_count: int
+    try:
+        comment_count = int(html.find(".comment-counter", first=True).text)
+    except AttributeError:
+        comment_count = 0
+    return comment_count
+
+
+def get_topic_comment_count(html: HTML) -> int:
     comment_count: int
     try:
         comment_count = int(html.find(".commentCount", first=True).text)
@@ -22,14 +31,26 @@ def get_comment_count(html: HTML) -> int:
 
 def active_topics(html: HTML) -> Generator[dict, None, None]:
     for tr in html.find(".listing tr")[1:]:
+        poster_elem = tr.find(".poster", first=True)
+        span = poster_elem.find("span", first=True)
+        if span is not None and "multiauthor" in span.attrs["class"]:
+            author = [
+                User(name=name.strip()) for name in span.attrs["title"].split(",")
+            ]
+        else:
+            username = poster_elem.find("a", first=True).text
+            user_url = tr.find(".poster a", first=True).attrs["href"]
+            user_id = user_url.split("/")[-1]
+            author = User(id=user_id, name=username, url=user_url)
+
         topic: Dict = {
             "title": tr.find(".topic a", first=True).text,
             "url": tr.find(".topic a", first=True).attrs["href"],
-            "poster": tr.find(".poster", first=True).text,
+            "author": author,
             "last_reply": dateparser.parse(
                 tr.find(".time a", first=True).text, languages=["nl"]
             ),
-            "comment_count": get_comment_count(tr),
+            "comment_count": get_topic_comment_count(tr),
         }
         yield topic
 
@@ -108,7 +129,7 @@ def frontpage_articles(html: HTML) -> Generator[dict, None, None]:
             topic: Dict = {
                 "title": elem.find(".headline--anchor", first=True).text,
                 "url": elem.find("a.headline--anchor", first=True).attrs["href"],
-                "comment_count": get_comment_count(elem),
+                "comment_count": get_article_comment_count(elem),
                 "published_at": timestamp,
             }
             yield topic
